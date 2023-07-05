@@ -10,5 +10,4 @@ public class Receiver {
     public void receiveMessage(String order){
         System.out.println("Order Received = " + order);
     }
-
 }
