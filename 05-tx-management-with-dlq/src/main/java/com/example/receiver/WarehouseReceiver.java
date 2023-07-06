@@ -16,9 +16,14 @@ public class WarehouseReceiver {
     private WarehouseProcessingService warehouseProcessingService;
 
     @JmsListener(destination = "book.order.queue")
-    public void receive(BookOrder bookOrder){
+    public void receive(BookOrder bookOrder) {
         LOGGER.info("Message received!");
         LOGGER.info("Message is == " + bookOrder);
+
+        if (bookOrder.getBook().getTitle().startsWith("L")) {
+            throw new RuntimeException("bookOrderId=" + bookOrder.getBookOrderId() + " is of a book not allowed!");
+        }
+
         warehouseProcessingService.processOrder(bookOrder);
     }
 }
