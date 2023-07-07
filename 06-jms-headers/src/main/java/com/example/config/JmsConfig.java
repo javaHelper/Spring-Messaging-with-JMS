@@ -1,6 +1,5 @@
 package com.example.config;
 
-import com.example.listener.BookOrderProcessingMessageListener;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +17,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 public class JmsConfig {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(JmsConfig.class);
 
     @Value("${spring.activemq.broker-url}")
@@ -38,26 +38,15 @@ public class JmsConfig {
     }
 
     @Bean
-    public JmsTemplate jmsTemplate() {
-        JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory());
-        jmsTemplate.setMessageConverter(jacksonJmsMessageConverter());
-        jmsTemplate.setDeliveryPersistent(true);
-        jmsTemplate.setSessionTransacted(true);
-        return jmsTemplate;
-    }
-
-    @Bean
     public CachingConnectionFactory connectionFactory() {
-        CachingConnectionFactory factory = new CachingConnectionFactory(new ActiveMQConnectionFactory(user, password, brokerUrl));
+        CachingConnectionFactory factory = new CachingConnectionFactory(
+                new ActiveMQConnectionFactory(user, password, brokerUrl)
+        );
         factory.setClientId("StoreFront");
         factory.setSessionCacheSize(100);
         return factory;
     }
 
-    @Bean
-    public PlatformTransactionManager jmsTransactionManager() {
-        return new JmsTransactionManager(connectionFactory());
-    }
 
     @Bean
     public DefaultJmsListenerContainerFactory jmsListenerContainerFactory() {
@@ -66,13 +55,22 @@ public class JmsConfig {
         factory.setMessageConverter(jacksonJmsMessageConverter());
         factory.setTransactionManager(jmsTransactionManager());
         factory.setErrorHandler(t -> {
-            LOGGER.info("Handling error in listening for messages, error: {}", t.getMessage());
+            LOGGER.info("Handling error in listening for messages, error: " + t.getMessage());
         });
         return factory;
     }
 
     @Bean
-    public BookOrderProcessingMessageListener jmsMessageListener() {
-        return new BookOrderProcessingMessageListener();
+    public PlatformTransactionManager jmsTransactionManager(){
+        return new JmsTransactionManager(connectionFactory());
+    }
+
+    @Bean
+    public JmsTemplate jmsTemplate(){
+        JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory());
+        jmsTemplate.setMessageConverter(jacksonJmsMessageConverter());
+        jmsTemplate.setDeliveryPersistent(true);
+        jmsTemplate.setSessionTransacted(true);
+        return jmsTemplate;
     }
 }
