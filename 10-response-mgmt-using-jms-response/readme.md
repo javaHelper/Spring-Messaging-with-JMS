@@ -6,14 +6,32 @@ First hot the NEW endpoint, then UPDATE and then DELETE
 - http://localhost:8080/process/store/1/order/1/1/1/UPDATE/
 - http://localhost:8080/process/store/1/order/1/1/1/DELETE/
 
+Goto http://0.0.0.0:8161/ - username/password = admin/admin
 
+You can see `book.order.canceled.queue` and `book.order.processed.queue`
+
+<img width="1181" alt="Screenshot 2023-07-07 at 7 16 16 PM" src="https://github.com/javaHelper/Spring-Messaging-with-JMS/assets/54174687/5a5f5d05-efde-47ca-acec-9fbd47645bf8">
+
+------
+Clicked on the `book.order.processed.queue` and you should be able to see message like below
+
+<img width="1197" alt="Screenshot 2023-07-08 at 1 11 43 AM" src="https://github.com/javaHelper/Spring-Messaging-with-JMS/assets/54174687/14de8ef2-0b04-4b21-b11f-1f9716dadfc0">
+
+Then click on the first message and you should see all the details
 
 <img width="1094" alt="Screenshot 2023-07-07 at 7 16 39 PM" src="https://github.com/javaHelper/Spring-Messaging-with-JMS/assets/54174687/61a42f02-6712-4685-8982-214ff1288354">
+
+----------
+
+Then clicked on the `book.order.canceled.queue` and you should be able to see something like below - 
+
 <img width="1149" alt="Screenshot 2023-07-07 at 7 16 27 PM" src="https://github.com/javaHelper/Spring-Messaging-with-JMS/assets/54174687/cf2a0f11-6117-4fbc-ac9f-b3da89ea12ab">
-<img width="1181" alt="Screenshot 2023-07-07 at 7 16 16 PM" src="https://github.com/javaHelper/Spring-Messaging-with-JMS/assets/54174687/5a5f5d05-efde-47ca-acec-9fbd47645bf8">
+
 
 
 - JmsConfig.java
+
+
 
 ````java
 package com.example.config;
