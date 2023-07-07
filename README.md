@@ -23,3 +23,18 @@ docker -it rmohr/activemq bash
         return singleConnectionFactory;
     }
 ```
+
+---
+
+- Connection configuration using CachingConnectionFactory
+
+
+```java
+@Bean
+public CachingConnectionFactory connectionFactory() {
+        CachingConnectionFactory factory = new CachingConnectionFactory(new ActiveMQConnectionFactory(user, password, brokerUrl));
+        factory.setClientId("StoreFront");
+        factory.setSessionCacheSize(100);
+        return factory;
+    }
+```
