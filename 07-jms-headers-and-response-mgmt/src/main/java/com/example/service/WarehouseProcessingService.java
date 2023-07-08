@@ -19,14 +19,9 @@ public class WarehouseProcessingService {
     private JmsTemplate jmsTemplate;
 
     @Transactional
-    public void processOrder(BookOrder bookOrder){
-        ProcessedBookOrder order = new ProcessedBookOrder(
-                bookOrder,
-                new Date(),
-                new Date()
-
-        );
-        LOGGER.info("sending message "+ order);
+    public void processOrder(BookOrder bookOrder) {
+        ProcessedBookOrder order = new ProcessedBookOrder(bookOrder, new Date(), new Date());
+        LOGGER.info("sending message {}", order);
         jmsTemplate.convertAndSend("book.order.processed.queue", order);
     }
 }
