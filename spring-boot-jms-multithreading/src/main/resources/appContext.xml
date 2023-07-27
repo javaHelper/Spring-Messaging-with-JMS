@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jms="http://www.springframework.org/schema/jms"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            https://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/jms 
+            https://www.springframework.org/schema/jms/spring-jms.xsd">
+
+	<bean id="amqConnectionFactory"
+		class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://localhost:61616" />
+	</bean>
+
+	<bean id="connectionFactory"
+		class="org.springframework.jms.connection.CachingConnectionFactory">
+		<property name="targetConnectionFactory"
+			ref="amqConnectionFactory" />
+	</bean>
+
+
+	<bean id="jacksonJmsMessageConverter" class="org.springframework.jms.support.converter.MappingJackson2MessageConverter">
+		<property name="typeIdPropertyName" value="_type" />
+	</bean>
+
+	<bean id="jmsContainerFactory"
+		class="org.springframework.jms.config.DefaultJmsListenerContainerFactory">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="messageConverter"
+			ref="jacksonJmsMessageConverter" />
+		<property name="pubSubDomain" value="true" />
+	</bean>
+
+
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="messageConverter"
+			ref="jacksonJmsMessageConverter" />
+	</bean>
+
+	<bean id="bulkUpload" class="com.example.demo.model.service.BulkJmsMessageSender">
+		<property name="jmsTemplate" ref="jmsTemplate" />
+	</bean>
+
+</beans>           
